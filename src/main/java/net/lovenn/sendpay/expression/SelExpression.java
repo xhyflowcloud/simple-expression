@@ -1,8 +1,23 @@
 package net.lovenn.sendpay.expression;
 
-public class SelExpression extends Node{
+public class SelExpression implements Expression {
 
-    public SelExpression(TokenKind kind, Node... children) {
-        super(kind, children);
+    private final String expression;
+
+    private final Node ast;
+
+    private final ParserContext parserContext;
+
+    public SelExpression(String expression, Node ast, ParserContext parserContext) {
+        this.expression = expression;
+        this.ast = ast;
+        this.parserContext = parserContext;
     }
+
+    @Override
+    public String getExpressionString() {
+        return null;
+    }
+
+
 }

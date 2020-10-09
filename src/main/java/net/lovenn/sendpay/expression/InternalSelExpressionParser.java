@@ -33,14 +33,18 @@ public class InternalSelExpressionParser {
             this.tokenStream = tokenizer.process();
             this.tokenStreamLength = this.tokenStream.size();
             this.context.set(context);
+            Node expressNode = this.eatExpression();
+            Token t = this.peekToken();
+            if(t != null) {
+                throw new ParseException("express parse error");
+            }
+            return new SelExpression(this.expressionString, expressNode, context);
         } catch (Exception e) {
             //log
             throw new ParseException(e.getMessage());
         } finally {
             this.context.remove();
         }
-
-        return null;
     }
 
     private Node eatExpression() {
@@ -143,18 +147,21 @@ public class InternalSelExpressionParser {
 
     private Node eatPrimaryExpression() {
         Token token = takeToken();
+        if(token.kind == TokenKind.BEAN_REF) {
+            return createNode(token);
+        }
         if(token.kind == TokenKind.LPAREN) {
             parens.push(TokenKind.LPAREN);
-            return eatPrimaryExpression();
+            return eatExpression();
         }
-        if(token.kind == TokenKind.RPAREN) {
+        else if(token.kind == TokenKind.RPAREN) {
             if(parens.empty()) {
                 throw new IllegalStateException("express parse error");
             }
             parens.pop();
             return null;
         }
-        return createNode(token);
+        return null;
     }
 
     private boolean peekToken(TokenKind... kinds) {

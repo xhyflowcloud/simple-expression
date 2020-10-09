@@ -1,5 +1,7 @@
 package net.lovenn.sendpay;
 
+import net.lovenn.sendpay.expression.InternalSelExpressionParser;
+import net.lovenn.sendpay.expression.ParseException;
 import net.lovenn.sendpay.expression.Tokenizer;
 
 import java.util.regex.Matcher;
@@ -10,7 +12,8 @@ public class ApplicationTest {
 
     public static void main(String[] args) {
         //testTokenizer();
-        testVarRegex();
+        //testVarRegex();
+        testEatExpression();
     }
 
 
@@ -39,7 +42,17 @@ public class ApplicationTest {
             matcher.find();
             System.out.println(matcher.group());
         }
+    }
 
-
+    private static void testEatExpression() {
+        {
+            try {
+                String express = "(1 + 2) * 4 + 5 * 5";
+                InternalSelExpressionParser parser = new InternalSelExpressionParser();
+                parser.doParseExpression(express, null);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
