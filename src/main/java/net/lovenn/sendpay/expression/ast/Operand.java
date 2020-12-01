@@ -1,9 +1,9 @@
 package net.lovenn.sendpay.expression.ast;
 
-import net.lovenn.sendpay.expression.Node;
+import net.lovenn.sendpay.expression.SelNode;
 import net.lovenn.sendpay.expression.TokenKind;
 
-public class Operand extends Node {
+public class Operand extends SelNode {
     private String value;
 
     public Operand(TokenKind kind, String value) {

@@ -15,4 +15,20 @@ public class Token {
         this.kind = kind;
         this.data = new String(data);
     }
+
+    public TokenKind getKind() {
+        return kind;
+    }
+
+    public void setKind(TokenKind kind) {
+        this.kind = kind;
+    }
+
+    public String getData() {
+        return data;
+    }
+
+    public void setData(String data) {
+        this.data = data;
+    }
 }

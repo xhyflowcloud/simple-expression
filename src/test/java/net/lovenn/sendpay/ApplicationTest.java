@@ -1,5 +1,6 @@
 package net.lovenn.sendpay;
 
+import com.alibaba.fastjson.JSON;
 import net.lovenn.sendpay.expression.InternalSelExpressionParser;
 import net.lovenn.sendpay.expression.ParseException;
 import net.lovenn.sendpay.expression.Tokenizer;
@@ -11,9 +12,9 @@ public class ApplicationTest {
     private static final Pattern VAR_REGEX = Pattern.compile("^@([0-9a-zA-Z]+)(\\[(\\d+),(\\d+)])?$");
 
     public static void main(String[] args) {
-        //testTokenizer();
+        testTokenizer();
         //testVarRegex();
-        testEatExpression();
+        //testEatExpression();
     }
 
 
@@ -21,13 +22,13 @@ public class ApplicationTest {
         {
             String express = "(1 + 2) * 4 + 5 * 5";
             Tokenizer tokenizer = new Tokenizer(express);
-            System.out.println(tokenizer.process());
+            System.out.println(JSON.toJSONString(tokenizer.process()));;
         }
 
         {
             String express = "(sendpay[1,2] + 2) * 4 + 5 * 5";
             Tokenizer tokenizer = new Tokenizer(express);
-            System.out.println(tokenizer.process());
+            System.out.println(JSON.toJSONString(tokenizer.process()));;
         }
     }
 

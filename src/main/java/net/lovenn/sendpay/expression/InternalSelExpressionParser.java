@@ -5,8 +5,6 @@ import net.lovenn.sendpay.expression.ast.*;
 import java.util.Collections;
 import java.util.List;
 import java.util.Stack;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class InternalSelExpressionParser {
 
@@ -33,12 +31,12 @@ public class InternalSelExpressionParser {
             this.tokenStream = tokenizer.process();
             this.tokenStreamLength = this.tokenStream.size();
             this.context.set(context);
-            Node expressNode = this.eatExpression();
+            SelNode expressSelNode = this.eatExpression();
             Token t = this.peekToken();
-            if(t != null) {
-                throw new ParseException("express parse error");
+            if (t != null) {
+                throw new ParseException("express parse error!");
             }
-            return new SelExpression(this.expressionString, expressNode, context);
+            return new SelExpression(this.expressionString, expressSelNode, context);
         } catch (Exception e) {
             //log
             throw new ParseException(e.getMessage());
@@ -47,130 +45,110 @@ public class InternalSelExpressionParser {
         }
     }
 
-    private Node eatExpression() {
-        Node node = eatLogicalOrExpression();
-        return node;
+    private SelNode eatExpression() {
+        SelNode selNode = eatLogicalExpression();
+        return selNode;
     }
 
-    private Node eatLogicalOrExpression() {
-        Node lexpr = eatLogicalAndExpression();
-        while (peekToken(TokenKind.SYMBOLIC_OR)) {
+    private SelNode eatLogicalExpression() {
+        SelNode lrexpr = eatRelationalExpression();
+        while (isPeekToken(TokenKind.SYMBOLIC_AND, TokenKind.SYMBOLIC_OR)) {
             Token token = takeToken();
-            Node rexpr = eatLogicalAndExpression();
-            checkOperands(token, lexpr, rexpr);
-            lexpr = new OpOr(lexpr, rexpr);
-        }
-        return lexpr;
-    }
-
-    private Node eatLogicalAndExpression() {
-        Node lexpr = eatRelationalExpression();
-        while (peekToken(TokenKind.SYMBOLIC_AND)) {
-            Token token = takeToken();
-            Node rexpr = eatRelationalExpression();
-            checkOperands(token, lexpr, rexpr);
-            lexpr = new OpOr(lexpr, rexpr);
-        }
-        return lexpr;
-    }
-
-    private Node eatRelationalExpression() {
-        Node lexpr = eatSumExpression();
-        while (peekToken(TokenKind.GT, TokenKind.GE, TokenKind.LT, TokenKind.LE, TokenKind.EQ, TokenKind.NE)) {
-            Token token = takeToken();
-            Node rexpr = eatSumExpression();
-            checkOperands(token, lexpr, rexpr);
-            if(token.kind == TokenKind.GT) {
-                lexpr = new OpGT(lexpr, rexpr);
-            }
-            if(token.kind == TokenKind.GE) {
-                lexpr = new OpGE(lexpr, rexpr);
-            }
-            if(token.kind == TokenKind.LT) {
-                lexpr = new OpLT(lexpr, rexpr);
-            }
-            if(token.kind == TokenKind.LE) {
-                lexpr = new OpLE(lexpr, rexpr);
-            }
-            if(token.kind == TokenKind.EQ) {
-                lexpr = new OpEQ(lexpr, rexpr);
-            }
-            if(token.kind == TokenKind.NE) {
-                lexpr = new OpNE(lexpr, rexpr);
+            SelNode rrexpr = eatRelationalExpression();
+            checkOperands(token, lrexpr, rrexpr);
+            if (token.kind == TokenKind.SYMBOLIC_AND) {
+                lrexpr = new OpOr(lrexpr, rrexpr);
+            } else if (token.kind == TokenKind.SYMBOLIC_OR) {
+                lrexpr = new OpAnd(lrexpr, rrexpr);
             }
         }
-        return lexpr;
+        return lrexpr;
     }
 
-    private Node eatSumExpression() {
-        Node lexpr = eatProductExpression();
-        while (peekToken(TokenKind.PLUS, TokenKind.MINUS)) {
+    private SelNode eatRelationalExpression() {
+        SelNode lsexpr = eatSumExpression();
+        while (isPeekToken(TokenKind.GT, TokenKind.GE, TokenKind.LT, TokenKind.LE, TokenKind.EQ, TokenKind.NE)) {
             Token token = takeToken();
-            Node rexpr = eatProductExpression();
-            checkOperands(token, lexpr, rexpr);
-            if(token.kind == TokenKind.PLUS) {
-                lexpr = new OpPlus(lexpr, rexpr);
-            }
-            if(token.kind == TokenKind.MINUS) {
-                lexpr = new OpMinus(lexpr, rexpr);
+            SelNode rsexpr = eatSumExpression();
+            checkOperands(token, lsexpr, rsexpr);
+            if (token.kind == TokenKind.GT) {
+                lsexpr = new OpGT(lsexpr, rsexpr);
+            } else if (token.kind == TokenKind.GE) {
+                lsexpr = new OpGE(lsexpr, rsexpr);
+            } else if (token.kind == TokenKind.LT) {
+                lsexpr = new OpLT(lsexpr, rsexpr);
+            } else if (token.kind == TokenKind.LE) {
+                lsexpr = new OpLE(lsexpr, rsexpr);
+            } else if (token.kind == TokenKind.EQ) {
+                lsexpr = new OpEQ(lsexpr, rsexpr);
+            } else if (token.kind == TokenKind.NE) {
+                lsexpr = new OpNE(lsexpr, rsexpr);
             }
         }
-        return lexpr;
-
+        return lsexpr;
     }
 
-    private Node eatProductExpression() {
-        Node lexpr = eatUnaryExpression();
-        while (peekToken(TokenKind.STAR, TokenKind.DIV)) {
+    private SelNode eatSumExpression() {
+        SelNode lpexpr = eatProductExpression();
+        while (isPeekToken(TokenKind.PLUS, TokenKind.MINUS)) {
             Token token = takeToken();
-            Node rexpr = eatUnaryExpression();
-            checkOperands(token, lexpr, rexpr);
-            if(token.kind == TokenKind.STAR) {
-                lexpr = new OpMultiply(lexpr, rexpr);
-            }
-            if(token.kind == TokenKind.DIV) {
-                lexpr = new OpDivide(lexpr, rexpr);
+            SelNode rpexpr = eatProductExpression();
+            checkOperands(token, lpexpr, rpexpr);
+            if (token.kind == TokenKind.PLUS) {
+                lpexpr = new OpPlus(lpexpr, rpexpr);
+            } else if (token.kind == TokenKind.MINUS) {
+                lpexpr = new OpMinus(lpexpr, rpexpr);
             }
         }
-        return lexpr;
+        return lpexpr;
     }
 
-    private Node eatUnaryExpression() {
-        if(peekToken(TokenKind.NOT)) {
+    private SelNode eatProductExpression() {
+        SelNode luexpr = eatUnaryExpression();
+        while (isPeekToken(TokenKind.STAR, TokenKind.DIV)) {
+            Token token = takeToken();
+            SelNode ruexpr = eatUnaryExpression();
+            checkOperands(token, luexpr, ruexpr);
+            if (token.kind == TokenKind.STAR) {
+                luexpr = new OpMultiply(luexpr, ruexpr);
+            } else if (token.kind == TokenKind.DIV) {
+                luexpr = new OpDivide(luexpr, ruexpr);
+            }
+        }
+        return luexpr;
+    }
+
+    private SelNode eatUnaryExpression() {
+        if (isPeekToken(TokenKind.NOT)) {
             Token t = takeToken();
-            Node expr = eatUnaryExpression();
+            SelNode expr = eatUnaryExpression();
             checkOperand(t, expr);
             return new OpNot(expr);
         }
         return eatPrimaryExpression();
     }
 
-    private Node eatPrimaryExpression() {
+    private SelNode eatPrimaryExpression() {
         Token token = takeToken();
-        if(token.kind == TokenKind.BEAN_REF) {
-            return createNode(token);
-        }
-        if(token.kind == TokenKind.LPAREN) {
+        if (token.kind == TokenKind.LPAREN) {
             parens.push(TokenKind.LPAREN);
-            return eatExpression();
-        }
-        else if(token.kind == TokenKind.RPAREN) {
-            if(parens.empty()) {
-                throw new IllegalStateException("express parse error");
+            SelNode cexpr = eatExpression();
+            Token rpToken = takeToken();
+            if (rpToken.kind != TokenKind.RPAREN) {
+                throw new IllegalStateException("express parse error!");
             }
-            parens.pop();
-            return null;
+            return cexpr;
         }
-        return null;
+        return new Operand(token.kind, token.data);
     }
 
-    private boolean peekToken(TokenKind... kinds) {
+    private boolean isPeekToken(TokenKind... kinds) {
         Token token = peekToken();
-        if(token == null) {
+        if (token == null) {
             return false;
         }
-        for (TokenKind kind: kinds) {
-            if(token.kind == kind) {
+        for (TokenKind kind : kinds) {
+            if (token.kind == kind) {
                 return true;
             }
         }
@@ -191,53 +169,14 @@ public class InternalSelExpressionParser {
         return this.tokenStream.get(this.tokenStreamPointer++);
     }
 
-    private Token nextToken() {
-        if (this.tokenStreamPointer >= this.tokenStreamLength) {
-            return null;
-        }
-        return this.tokenStream.get(this.tokenStreamPointer++);
-    }
-
-    private void checkOperands(Token token, Node left, Node right) {
+    private void checkOperands(Token token, SelNode left, SelNode right) {
         checkOperand(token, left);
         checkOperand(token, right);
     }
 
-    private void checkOperand(Token token, Node node) {
-        if(node == null) {
+    private void checkOperand(Token token, SelNode selNode) {
+        if (selNode == null) {
             throw new IllegalStateException("operand can not null!");
         }
     }
-
-    private Node createNode(Token token) {
-        Node node;
-        if((node = variableNode(token)) != null) {
-            return node;
-        }
-        return new Operand(token.kind, token.data);
-    }
-
-    private Node variableNode(Token token) {
-        Matcher matcher;
-        while ((matcher = VAR_REGEX.matcher(token.data)).find()) {
-            if(matcher.groupCount() == 1) {
-                String value = context.get().findValue(matcher.group(1));
-                return new Operand(TokenKind.IDENTIFIER, value);
-            }
-            if(matcher.groupCount() == 4) {
-                int start = Integer.parseInt(matcher.group(3));
-                int end = Integer.parseInt(matcher.group(4));
-                String value = context.get().findValue(matcher.group(1));
-                if(value.length() >= end) {
-                    return new Operand(token.kind, value.substring(start, end));
-                } else {
-                    return new Operand(token.kind, null);
-                }
-            }
-            throw new IllegalStateException("express parse error!");
-        }
-        return null;
-    }
-
-    private static final Pattern VAR_REGEX = Pattern.compile("^@([0-9a-zA-Z]+)(\\[(\\d+),(\\d+)])?$");
 }
