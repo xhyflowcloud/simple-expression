@@ -7,9 +7,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Tokenizer {
-    // If this gets changed, it must remain sorted...
-    private static final String[] ALTERNATIVE_OPERATOR_NAMES =
-            {"DIV", "EQ", "GE", "GT", "LE", "LT", "MOD", "NE", "NOT"};
 
     private static final byte[] FLAGS = new byte[256];
 
@@ -121,7 +118,7 @@ public class Tokenizer {
                         if (isTwoCharToken(TokenKind.SYMBOLIC_OR)) {
                             pushTwoCharToken(TokenKind.SYMBOLIC_OR);
                         } else {
-                            pushCharToken(TokenKind.LT);
+                            throw new IllegalArgumentException("token parse error!");
                         }
                         break;
                     default: {
@@ -193,8 +190,11 @@ public class Tokenizer {
         return (FLAGS[ch] & IS_ALPHA) != 0;
     }
 
-    // ID: ('a'..'z'|'A'..'Z'|'_'|'$') ('a'..'z'|'A'..'Z'|'_'|'$'|'0'..'9'|DOT_ESCAPED)*;
     private boolean isIdentifier(char ch) {
         return isAlphabetic(ch) || isDigit(ch) || ch == ',' || ch == '[' || ch == ']' || ch == '@';
+    }
+
+    public String getExpressionString() {
+        return expressionString;
     }
 }
