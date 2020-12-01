@@ -1,22 +1,19 @@
 package net.lovenn.sendpay.expression;
 
-public class SelNode {
+public interface SelNode {
 
-    private TokenKind kind;
+    /**
+     * 获取值
+     */
+    Object getValue(SelExecuteContext context) throws SelExecuteException;
 
-    private SelNode parent;
+    /**
+     * 获取token类型
+     */
+    TokenKind tokenKind();
 
-    private SelNode[] children;
-
-    public SelNode(TokenKind kind, SelNode... children) {
-        this.kind = kind;
-        for (SelNode selNode : children) {
-            selNode.parent = this;
-        }
-        this.children = children;
-    }
-
-    public Object getValue() {
-        return new Object();
-    }
+    /**
+     * 获取父节点
+     */
+    SelNode parent();
 }

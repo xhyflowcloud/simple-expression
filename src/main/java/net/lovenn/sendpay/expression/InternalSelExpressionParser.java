@@ -4,14 +4,8 @@ import net.lovenn.sendpay.expression.ast.*;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Stack;
 
 public class InternalSelExpressionParser {
-
-    // The expression being parsed
-    private String expressionString = "";
-
-    private final Stack<TokenKind> parens = new Stack<TokenKind>();
 
     // The token stream constructed from that expression string
     private List<Token> tokenStream = Collections.emptyList();
@@ -22,54 +16,54 @@ public class InternalSelExpressionParser {
     // Current location in the token stream when processing tokens
     private int tokenStreamPointer;
 
-    private ThreadLocal<ParserContext> context = new ThreadLocal<ParserContext>();
+    private ThreadLocal<SelParserContext> context = new ThreadLocal<SelParserContext>();
 
-    public SelExpression doParseExpression(String expressionString, ParserContext context) throws ParseException {
+    public SelSelExpressionImpl doParseExpression(String expressionString, SelParserContext context) throws SelParseException {
 
         try {
             Tokenizer tokenizer = new Tokenizer(expressionString);
             this.tokenStream = tokenizer.process();
             this.tokenStreamLength = this.tokenStream.size();
             this.context.set(context);
-            SelNode expressSelNode = this.eatExpression();
+            SelNodeImpl expressSelNodeImpl = this.eatExpression();
             Token t = this.peekToken();
             if (t != null) {
-                throw new ParseException("express parse error!");
+                throw new SelParseException("express parse error!");
             }
-            return new SelExpression(this.expressionString, expressSelNode, context);
+            return new SelSelExpressionImpl(expressionString, expressSelNodeImpl);
         } catch (Exception e) {
             //log
-            throw new ParseException(e.getMessage());
+            throw new SelParseException(e.getMessage());
         } finally {
             this.context.remove();
         }
     }
 
-    private SelNode eatExpression() {
-        SelNode selNode = eatLogicalExpression();
-        return selNode;
+    private SelNodeImpl eatExpression() {
+        SelNodeImpl selNodeImpl = eatLogicalExpression();
+        return selNodeImpl;
     }
 
-    private SelNode eatLogicalExpression() {
-        SelNode lrexpr = eatRelationalExpression();
+    private SelNodeImpl eatLogicalExpression() {
+        SelNodeImpl lrexpr = eatRelationalExpression();
         while (isPeekToken(TokenKind.SYMBOLIC_AND, TokenKind.SYMBOLIC_OR)) {
             Token token = takeToken();
-            SelNode rrexpr = eatRelationalExpression();
+            SelNodeImpl rrexpr = eatRelationalExpression();
             checkOperands(token, lrexpr, rrexpr);
             if (token.kind == TokenKind.SYMBOLIC_AND) {
-                lrexpr = new OpOr(lrexpr, rrexpr);
-            } else if (token.kind == TokenKind.SYMBOLIC_OR) {
                 lrexpr = new OpAnd(lrexpr, rrexpr);
+            } else if (token.kind == TokenKind.SYMBOLIC_OR) {
+                lrexpr = new OpOr(lrexpr, rrexpr);
             }
         }
         return lrexpr;
     }
 
-    private SelNode eatRelationalExpression() {
-        SelNode lsexpr = eatSumExpression();
+    private SelNodeImpl eatRelationalExpression() {
+        SelNodeImpl lsexpr = eatSumExpression();
         while (isPeekToken(TokenKind.GT, TokenKind.GE, TokenKind.LT, TokenKind.LE, TokenKind.EQ, TokenKind.NE)) {
             Token token = takeToken();
-            SelNode rsexpr = eatSumExpression();
+            SelNodeImpl rsexpr = eatSumExpression();
             checkOperands(token, lsexpr, rsexpr);
             if (token.kind == TokenKind.GT) {
                 lsexpr = new OpGT(lsexpr, rsexpr);
@@ -88,11 +82,11 @@ public class InternalSelExpressionParser {
         return lsexpr;
     }
 
-    private SelNode eatSumExpression() {
-        SelNode lpexpr = eatProductExpression();
+    private SelNodeImpl eatSumExpression() {
+        SelNodeImpl lpexpr = eatProductExpression();
         while (isPeekToken(TokenKind.PLUS, TokenKind.MINUS)) {
             Token token = takeToken();
-            SelNode rpexpr = eatProductExpression();
+            SelNodeImpl rpexpr = eatProductExpression();
             checkOperands(token, lpexpr, rpexpr);
             if (token.kind == TokenKind.PLUS) {
                 lpexpr = new OpPlus(lpexpr, rpexpr);
@@ -103,11 +97,11 @@ public class InternalSelExpressionParser {
         return lpexpr;
     }
 
-    private SelNode eatProductExpression() {
-        SelNode luexpr = eatUnaryExpression();
+    private SelNodeImpl eatProductExpression() {
+        SelNodeImpl luexpr = eatUnaryExpression();
         while (isPeekToken(TokenKind.STAR, TokenKind.DIV)) {
             Token token = takeToken();
-            SelNode ruexpr = eatUnaryExpression();
+            SelNodeImpl ruexpr = eatUnaryExpression();
             checkOperands(token, luexpr, ruexpr);
             if (token.kind == TokenKind.STAR) {
                 luexpr = new OpMultiply(luexpr, ruexpr);
@@ -118,21 +112,20 @@ public class InternalSelExpressionParser {
         return luexpr;
     }
 
-    private SelNode eatUnaryExpression() {
+    private SelNodeImpl eatUnaryExpression() {
         if (isPeekToken(TokenKind.NOT)) {
             Token t = takeToken();
-            SelNode expr = eatUnaryExpression();
+            SelNodeImpl expr = eatUnaryExpression();
             checkOperand(t, expr);
             return new OpNot(expr);
         }
         return eatPrimaryExpression();
     }
 
-    private SelNode eatPrimaryExpression() {
+    private SelNodeImpl eatPrimaryExpression() {
         Token token = takeToken();
         if (token.kind == TokenKind.LPAREN) {
-            parens.push(TokenKind.LPAREN);
-            SelNode cexpr = eatExpression();
+            SelNodeImpl cexpr = eatExpression();
             Token rpToken = takeToken();
             if (rpToken.kind != TokenKind.RPAREN) {
                 throw new IllegalStateException("express parse error!");
@@ -169,13 +162,13 @@ public class InternalSelExpressionParser {
         return this.tokenStream.get(this.tokenStreamPointer++);
     }
 
-    private void checkOperands(Token token, SelNode left, SelNode right) {
+    private void checkOperands(Token token, SelNodeImpl left, SelNodeImpl right) {
         checkOperand(token, left);
         checkOperand(token, right);
     }
 
-    private void checkOperand(Token token, SelNode selNode) {
-        if (selNode == null) {
+    private void checkOperand(Token token, SelNodeImpl selNodeImpl) {
+        if (selNodeImpl == null) {
             throw new IllegalStateException("operand can not null!");
         }
     }

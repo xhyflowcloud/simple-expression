@@ -1,9 +1,7 @@
 package net.lovenn.sendpay;
 
 import com.alibaba.fastjson.JSON;
-import net.lovenn.sendpay.expression.InternalSelExpressionParser;
-import net.lovenn.sendpay.expression.ParseException;
-import net.lovenn.sendpay.expression.Tokenizer;
+import net.lovenn.sendpay.expression.*;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -12,9 +10,9 @@ public class ApplicationTest {
     private static final Pattern VAR_REGEX = Pattern.compile("^@([0-9a-zA-Z]+)(\\[(\\d+),(\\d+)])?$");
 
     public static void main(String[] args) {
-        testTokenizer();
+        //testTokenizer();
         //testVarRegex();
-        //testEatExpression();
+        testEatExpression();
     }
 
 
@@ -48,10 +46,15 @@ public class ApplicationTest {
     private static void testEatExpression() {
         {
             try {
-                String express = "(1 + 2) * 4 + 5 * 5";
+//                String express = "((1 + 2) * 4 > @sendpay[1,3] || @sendpay[174,191] == qwe) && @sendpay[66, 66] == 1";
+                String express = "1 + 1";
                 InternalSelExpressionParser parser = new InternalSelExpressionParser();
-                parser.doParseExpression(express, null);
-            } catch (ParseException e) {
+                SelSelExpressionImpl selExpression = parser.doParseExpression(express, null);
+
+                System.out.println(selExpression.getValue(null));
+            } catch (SelParseException e) {
+                e.printStackTrace();
+            } catch (SelExecuteException e) {
                 e.printStackTrace();
             }
         }

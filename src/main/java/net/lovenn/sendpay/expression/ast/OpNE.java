@@ -1,11 +1,11 @@
 package net.lovenn.sendpay.expression.ast;
 
-import net.lovenn.sendpay.expression.SelNode;
+import net.lovenn.sendpay.expression.SelNodeImpl;
 import net.lovenn.sendpay.expression.TokenKind;
 
 public class OpNE extends Operator {
 
-    public OpNE(SelNode opl, SelNode opr) {
+    public OpNE(SelNodeImpl opl, SelNodeImpl opr) {
         super(TokenKind.NE, opl, opr);
     }
 }

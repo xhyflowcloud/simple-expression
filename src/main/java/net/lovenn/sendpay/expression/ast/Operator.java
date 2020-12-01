@@ -2,9 +2,9 @@ package net.lovenn.sendpay.expression.ast;
 
 import net.lovenn.sendpay.expression.*;
 
-public class Operator extends SelNode {
+public class Operator extends SelNodeImpl {
 
-    public Operator(TokenKind kind, SelNode... children) {
+    public Operator(TokenKind kind, SelNodeImpl... children) {
         super(kind, children);
     }
 }

@@ -1,11 +1,15 @@
 package net.lovenn.sendpay.expression.ast;
 
-import net.lovenn.sendpay.expression.SelNode;
-import net.lovenn.sendpay.expression.TokenKind;
+import net.lovenn.sendpay.expression.*;
 
 public class OpAnd extends Operator {
 
-    public OpAnd(SelNode opl, SelNode opr) {
-        super(TokenKind.SYMBOLIC_OR, opl, opr);
+    public OpAnd(SelNodeImpl opl, SelNodeImpl opr) {
+        super(TokenKind.SYMBOLIC_AND, opl, opr);
+    }
+
+    @Override
+    public Object getValue(SelExecuteContext context) throws SelExecuteException {
+      return null;
     }
 }
