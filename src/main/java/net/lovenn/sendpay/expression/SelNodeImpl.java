@@ -50,9 +50,4 @@ public class SelNodeImpl implements SelNode {
     public SelNode[] getChildren() {
         return this.children;
     }
-
-    @Override
-    public void handleError(SelNode node) throws SelExecuteException {
-        throw new SelExecuteException("");
-    }
 }

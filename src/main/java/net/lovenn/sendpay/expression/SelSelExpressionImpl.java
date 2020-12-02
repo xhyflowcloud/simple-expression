@@ -22,12 +22,32 @@ public class SelSelExpressionImpl implements SelExpression {
     }
 
     @Override
-    public TokenKind tokenKind() {
+    public void setTokenKind(TokenKind tokenKind) {
+
+    }
+
+    @Override
+    public TokenKind getTokenKind() {
         return null;
     }
 
     @Override
-    public SelNode parent() {
+    public void setParent(SelNode parent) {
+
+    }
+
+    @Override
+    public SelNode getParent() {
         return null;
+    }
+
+    @Override
+    public void setChildren(SelNode... children) {
+
+    }
+
+    @Override
+    public SelNode[] getChildren() {
+        return new SelNode[0];
     }
 }

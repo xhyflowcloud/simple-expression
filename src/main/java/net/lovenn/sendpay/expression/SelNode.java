@@ -36,9 +36,4 @@ public interface SelNode {
      * 获取孩子节点
      */
     SelNode[] getChildren();
-
-    /**
-     * 处理错误
-     */
-    void handleError(SelNode node) throws SelExecuteException;
 }

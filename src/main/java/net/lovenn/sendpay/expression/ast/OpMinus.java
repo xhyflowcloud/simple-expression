@@ -8,20 +8,22 @@ public class OpMinus extends Operator {
         super(TokenKind.MINUS, opl, opr);
     }
 
+    @SuppressWarnings("all")
     @Override
     public Object getValue(SelExecuteContext context) throws SelExecuteException {
         SelNode[] selNodes = getChildren();
-        if(selNodes == null || selNodes.length < 2) {
-            throw new SelExecuteException("Operand number error!");
+        if (selNodes == null || selNodes.length != 2) {
+            this.handleOperandNumberError();
         }
-        int base = ((Integer) selNodes[0].getValue(context)) * 2;
-        for (SelNode node: selNodes) {
-            Object value = node.getValue(context);
-            if(!(value instanceof Integer)) {
-                throw new SelExecuteException("Not support type["+value.getClass().getSimpleName()+"]!");
-            }
-            base -= (Integer) value;
+        Object lv = selNodes[0].getValue(context);
+        Object rv = selNodes[1].getValue(context);
+        return handleMinusOperation(lv, rv);
+    }
+
+    private Integer handleMinusOperation(Object lv, Object rv) throws SelExecuteException {
+        if (isInteger(lv) && isInteger(rv)) {
+            return parseInteger(lv) - parseInteger(rv);
         }
-        return base;
+        throw new SelExecuteException("Not support operation.");
     }
 }
