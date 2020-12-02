@@ -4,7 +4,7 @@ import net.lovenn.sendpay.expression.*;
 
 public class Operator extends SelNodeImpl {
 
-    public Operator(TokenKind kind, SelNodeImpl... children) {
+    public Operator(TokenKind kind, SelNode... children) {
         super(kind, children);
     }
 }

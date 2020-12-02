@@ -8,15 +8,15 @@ public class OpPlus extends Operator {
 
     private static final Pattern DIGIT_REGEX = Pattern.compile("^\\d+$");
 
-    public OpPlus(SelNodeImpl opl, SelNodeImpl opr) {
+    public OpPlus(SelNode opl, SelNode opr) {
         super(TokenKind.PLUS, opl, opr);
     }
 
     @Override
     public Object getValue(SelExecuteContext context) throws SelExecuteException {
         SelNode[] selNodes = getChildren();
-        if(selNodes == null || selNodes.length < 2) {
-            throw new SelExecuteException("Operand number error!");
+        if(selNodes == null || selNodes.length != 2) {
+            throw new SelExecuteException("Express error!");
         }
         int base = 0;
         for (SelNode node: selNodes) {

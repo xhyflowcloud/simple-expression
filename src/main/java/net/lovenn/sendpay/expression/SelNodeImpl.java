@@ -1,7 +1,5 @@
 package net.lovenn.sendpay.expression;
 
-import net.lovenn.sendpay.expression.ast.Operand;
-
 public class SelNodeImpl implements SelNode {
 
     private TokenKind kind;
@@ -10,16 +8,12 @@ public class SelNodeImpl implements SelNode {
 
     private SelNode[] children;
 
-    public SelNodeImpl(TokenKind kind, SelNodeImpl... children) {
-        this.kind = kind;
-        for (SelNodeImpl selNodeImpl : children) {
-            selNodeImpl.parent = this;
+    public SelNodeImpl(TokenKind kind, SelNode... children) {
+        this.setTokenKind(kind);
+        for (SelNode selNode : children) {
+            selNode.setParent(this);
         }
-        this.children = children;
-    }
-
-    protected SelNode[] getChildren() {
-        return this.children;
+        this.setChildren(children);
     }
 
     @Override
@@ -28,12 +22,37 @@ public class SelNodeImpl implements SelNode {
     }
 
     @Override
-    public TokenKind tokenKind() {
+    public void setTokenKind(TokenKind tokenKind) {
+        this.kind = tokenKind;
+    }
+
+    @Override
+    public TokenKind getTokenKind() {
         return this.kind;
     }
 
     @Override
-    public SelNode parent() {
+    public void setParent(SelNode node) {
+        this.parent = node;
+    }
+
+    @Override
+    public SelNode getParent() {
         return this.parent;
+    }
+
+    @Override
+    public void setChildren(SelNode... children) {
+        this.children = children;
+    }
+
+    @Override
+    public SelNode[] getChildren() {
+        return this.children;
+    }
+
+    @Override
+    public void handleError(SelNode node) throws SelExecuteException {
+        throw new SelExecuteException("");
     }
 }
