@@ -60,8 +60,4 @@ public class Operator extends SelNodeImpl {
         int number = this.getChildren() == null ? 0 : this.getChildren().length;
         throw new SelExecuteException("Operator[" + this.getTokenKind().name() + "]'s operand number error, actual number is " + number + ".");
     }
-
-    public static void main(String[] args) {
-        System.out.println(BOOLEAN_REGEX.matcher("truefalse").find());
-    }
 }
