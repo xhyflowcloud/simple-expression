@@ -48,8 +48,8 @@ public class ApplicationTest {
             try {
 //                String express = "((1 + 2) * 4 > @sendpay[1,3] || @sendpay[174,191] == qwe) && @sendpay[66, 66] == 1";
                 String express = "@sendpay[1,3] > 10 && @sendpay[1] != 1";
-                InternalSelExpressionParser parser = new InternalSelExpressionParser();
-                SelSelExpressionImpl selExpression = parser.doParseExpression(express, null);
+                SelExpressionParser parser = new SelExpressionParser();
+                SelExpression selExpression = parser.getExpression(express, null);
                 SelExecuteContext context = new SelExecuteContext();
                 context.add("sendpay", "100000");
                 System.out.println(selExpression.getValue(context));
