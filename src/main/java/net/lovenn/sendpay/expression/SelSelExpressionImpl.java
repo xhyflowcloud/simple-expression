@@ -48,6 +48,6 @@ public class SelSelExpressionImpl implements SelExpression {
 
     @Override
     public SelNode[] getChildren() {
-        return new SelNode[0];
+        return null;
     }
 }

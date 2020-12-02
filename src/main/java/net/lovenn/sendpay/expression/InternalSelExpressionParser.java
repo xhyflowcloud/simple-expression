@@ -18,7 +18,7 @@ public class InternalSelExpressionParser {
 
     private ThreadLocal<SelParserContext> context = new ThreadLocal<SelParserContext>();
 
-    public SelSelExpressionImpl doParseExpression(String expressionString, SelParserContext context) throws SelParseException {
+    SelSelExpressionImpl doParseExpression(String expressionString, SelParserContext context) throws SelParseException {
 
         try {
             Tokenizer tokenizer = new Tokenizer(expressionString);

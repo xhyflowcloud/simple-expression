@@ -70,10 +70,4 @@ public class Operand extends SelNodeImpl {
         }
         return var;
     }
-
-    public static void main(String[] args) {
-        System.out.println(SENDPAY_REGEX.matcher("@sendpay[1,1]").find());
-        Matcher matcher = SENDPAY_REGEX.matcher("@sendpay[1,1]");
-        System.out.println(matcher.groupCount());
-    }
 }
