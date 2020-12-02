@@ -21,10 +21,9 @@ public class OpGE extends Operator {
     }
 
     private Boolean handleGEOperation(Object lv, Object rv) throws SelExecuteException {
-        if(!isInteger(lv) || !isInteger(rv)) {
+        if (!isInteger(lv) || !isInteger(rv)) {
             return false;
         }
         return parseInteger(lv) >= parseInteger(rv);
     }
-
 }
