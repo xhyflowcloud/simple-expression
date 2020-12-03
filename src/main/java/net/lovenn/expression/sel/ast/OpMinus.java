@@ -1,10 +1,13 @@
 package net.lovenn.expression.sel.ast;
 
-import net.lovenn.expression.sel.*;
+import net.lovenn.expression.sel.SelExecuteContext;
+import net.lovenn.expression.sel.SelExecuteException;
+import net.lovenn.expression.sel.SelNode;
+import net.lovenn.expression.sel.TokenKind;
 
 public class OpMinus extends Operator {
 
-    public OpMinus(SelNodeImpl opl, SelNodeImpl opr) {
+    public OpMinus(SelNode opl, SelNode opr) {
         super(TokenKind.MINUS, opl, opr);
     }
 

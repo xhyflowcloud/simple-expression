@@ -4,7 +4,7 @@ import net.lovenn.expression.sel.*;
 
 public class OpNot extends Operator {
 
-    public OpNot(SelNodeImpl op) {
+    public OpNot(SelNode op) {
         super(TokenKind.NOT, op);
     }
 

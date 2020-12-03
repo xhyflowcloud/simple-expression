@@ -1,10 +1,13 @@
 package net.lovenn.expression.sel.ast;
 
-import net.lovenn.expression.sel.*;
+import net.lovenn.expression.sel.SelExecuteContext;
+import net.lovenn.expression.sel.SelExecuteException;
+import net.lovenn.expression.sel.SelNode;
+import net.lovenn.expression.sel.TokenKind;
 
 public class OpGE extends Operator {
 
-    public OpGE(SelNodeImpl opl, SelNodeImpl opr) {
+    public OpGE(SelNode opl, SelNode opr) {
         super(TokenKind.GE, opl, opr);
     }
 

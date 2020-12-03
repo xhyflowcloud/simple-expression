@@ -1,13 +1,10 @@
 package net.lovenn.expression.sel.ast;
 
-import net.lovenn.expression.sel.SelExecuteContext;
-import net.lovenn.expression.sel.SelExecuteException;
-import net.lovenn.expression.sel.SelNodeImpl;
-import net.lovenn.expression.sel.TokenKind;
+import net.lovenn.expression.sel.*;
 
 public class OpMultiply extends Operator {
 
-    public OpMultiply(SelNodeImpl opl, SelNodeImpl opr) {
+    public OpMultiply(SelNode opl, SelNode opr) {
         super(TokenKind.STAR, opl, opr);
     }
 

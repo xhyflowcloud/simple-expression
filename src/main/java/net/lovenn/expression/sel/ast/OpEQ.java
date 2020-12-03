@@ -1,10 +1,13 @@
 package net.lovenn.expression.sel.ast;
 
-import net.lovenn.expression.sel.*;
+import net.lovenn.expression.sel.SelExecuteContext;
+import net.lovenn.expression.sel.SelExecuteException;
+import net.lovenn.expression.sel.SelNode;
+import net.lovenn.expression.sel.TokenKind;
 
 public class OpEQ extends Operator {
 
-    public OpEQ(SelNodeImpl opl, SelNodeImpl opr) {
+    public OpEQ(SelNode opl, SelNode opr) {
         super(TokenKind.EQ, opl, opr);
     }
 
@@ -21,7 +24,7 @@ public class OpEQ extends Operator {
     }
 
     private Boolean handleEQOperation(Object lv, Object rv) {
-        if(lv.equals(rv)) {
+        if (lv.equals(rv)) {
             return true;
         }
         return false;

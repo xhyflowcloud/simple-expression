@@ -1,10 +1,13 @@
 package net.lovenn.expression.sel.ast;
 
-import net.lovenn.expression.sel.*;
+import net.lovenn.expression.sel.SelExecuteContext;
+import net.lovenn.expression.sel.SelExecuteException;
+import net.lovenn.expression.sel.SelNode;
+import net.lovenn.expression.sel.TokenKind;
 
 public class OpLE extends Operator {
 
-    public OpLE(SelNodeImpl opl, SelNodeImpl opr) {
+    public OpLE(SelNode opl, SelNode opr) {
         super(TokenKind.LE, opl, opr);
     }
 
@@ -21,7 +24,7 @@ public class OpLE extends Operator {
     }
 
     private Boolean handleLEOperation(Object lv, Object rv) throws SelExecuteException {
-        if(isInteger(lv) && isInteger(rv)) {
+        if (isInteger(lv) && isInteger(rv)) {
             return parseInteger(lv) <= parseInteger(rv);
         }
         throw new SelExecuteException("Not support operation.");
