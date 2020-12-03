@@ -34,7 +34,6 @@ public class Tokenizer {
         }
     }
 
-
     private final String expressionString;
 
     private final char[] charsToProcess;
