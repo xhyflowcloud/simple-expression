@@ -1,6 +1,7 @@
 package net.lovenn.expression;
 
 import com.alibaba.fastjson.JSON;
+import net.lovenn.expression.handler.SendpayConverter;
 import net.lovenn.expression.sel.*;
 
 import java.util.regex.Matcher;
@@ -47,8 +48,9 @@ public class ApplicationTest {
         {
             try {
 //                String express = "((1 + 2) * 4 > @sendpay[1,3] || @sendpay[174,191] == qwe) && @sendpay[66, 66] == 1";
-                String express = "@orderType == 2";
+                String express = "(1 + 2) >= 3 && false";
                 SelExpressionParser parser = new SelExpressionParser();
+                parser.registerVariableHandler(new SendpayConverter());
                 SelExpression selExpression = parser.getExpression(express, null);
                 SelExecuteContext context = new SelExecuteContext();
                 context.add("sendpay", "100000");

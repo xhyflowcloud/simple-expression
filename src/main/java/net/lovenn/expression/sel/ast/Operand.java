@@ -4,13 +4,9 @@ import net.lovenn.expression.sel.SelExecuteContext;
 import net.lovenn.expression.sel.SelExecuteException;
 import net.lovenn.expression.sel.SelNodeImpl;
 import net.lovenn.expression.sel.TokenKind;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import net.lovenn.expression.util.ValueConverter;
 
 public class Operand extends SelNodeImpl {
-
-    private static final Pattern SENDPAY_REGEX = Pattern.compile("^@sendpay\\[(\\d+)(,(\\d+))?]$");
 
     private String value;
 
@@ -21,53 +17,6 @@ public class Operand extends SelNodeImpl {
 
     @Override
     public Object getValue(SelExecuteContext context) throws SelExecuteException {
-        if(value == null) {
-            throw new SelExecuteException("Operand can not null!");
-        }
-        if(value.startsWith("@")) {
-            return handleVariable(value, context);
-        }
-        if(value.equals("true") || value.equals("false")) {
-            return Boolean.parseBoolean(value);
-        }
-        return this.value;
-    }
-
-    private Object handleVariable(String value, SelExecuteContext context) throws SelExecuteException {
-        Matcher matcher = SENDPAY_REGEX.matcher(value);
-        if(matcher.find()) {
-            int s,e;
-            if(matcher.group(3) == null) {
-                s = Integer.parseInt(matcher.group(1));
-                e = s;
-            } else {
-                s = Integer.parseInt(matcher.group(1));
-                e = Integer.parseInt(matcher.group(3));
-            }
-            if(s > e) {
-                int t = s;
-                s = e;
-                e = t;
-            }
-            if(s < 1) {
-                throw new SelExecuteException("Range is illegal");
-            }
-
-            String sendpay = (String) context.get("sendpay");
-            if(sendpay == null) {
-                throw new SelExecuteException("Can not find variable[sendpay]");
-            }
-
-            if(sendpay.length() < s) {
-                throw new SelExecuteException("sendpay too short");
-            }
-            return sendpay.substring(s - 1, e);
-        }
-
-        Object var = context.get(value.substring(1));
-        if(var == null) {
-            throw new SelExecuteException("Can not find variable["+value+"]");
-        }
-        return var;
+        return ValueConverter.realValue(value, context);
     }
 }

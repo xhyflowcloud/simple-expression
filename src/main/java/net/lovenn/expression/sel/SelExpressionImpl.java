@@ -1,24 +1,24 @@
 package net.lovenn.expression.sel;
 
-import net.lovenn.expression.handler.VariableHandler;
+import net.lovenn.expression.handler.VariableConverter;
 
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class SelExpressionImpl implements SelExpression {
 
-    private ConcurrentHashMap<String, VariableHandler> handlerDict = new ConcurrentHashMap<String, VariableHandler>();
+    private ConcurrentHashMap<String, VariableConverter> handlerDict = new ConcurrentHashMap<String, VariableConverter>();
 
     private final String expressionString;
 
     private final SelNode ast;
 
-    SelExpressionImpl(String expressionString, SelNode ast, List<VariableHandler> variableHandlerList) {
+    SelExpressionImpl(String expressionString, SelNode ast, List<VariableConverter> variableConverterList) {
         this.expressionString = expressionString;
         this.ast = ast;
-        if(variableHandlerList != null) {
-            for (VariableHandler variableHandler: variableHandlerList) {
-                handlerDict.put(variableHandler.getVariableName(), variableHandler);
+        if(variableConverterList != null) {
+            for (VariableConverter variableConverter : variableConverterList) {
+                handlerDict.put(variableConverter.getVariableName(), variableConverter);
             }
         }
     }
@@ -30,6 +30,7 @@ public class SelExpressionImpl implements SelExpression {
 
     @Override
     public Object getValue(SelExecuteContext context) throws SelExecuteException {
+        context.setSelExpression(this);
         return ast.getValue(context);
     }
 
@@ -61,5 +62,10 @@ public class SelExpressionImpl implements SelExpression {
     @Override
     public SelNode[] getChildren() {
         return null;
+    }
+
+    @Override
+    public VariableConverter getVariableConverter(String variableName) {
+        return handlerDict.get(variableName);
     }
 }
