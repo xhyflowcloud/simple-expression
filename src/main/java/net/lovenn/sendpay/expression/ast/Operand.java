@@ -64,7 +64,7 @@ public class Operand extends SelNodeImpl {
             return sendpay.substring(s - 1, e);
         }
 
-        Object var = context.get(value);
+        Object var = context.get(value.substring(1));
         if(var == null) {
             throw new SelExecuteException("Can not find variable["+value+"]");
         }
