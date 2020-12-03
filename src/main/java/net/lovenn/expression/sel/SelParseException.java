@@ -16,8 +16,4 @@ public class SelParseException extends Exception {
     public SelParseException(Throwable cause) {
         super(cause);
     }
-
-    public SelParseException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
-    }
 }
