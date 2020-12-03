@@ -46,10 +46,10 @@ public class Tokenizer {
 
     public Tokenizer(String expressionString) {
         if (StringUtils.isBlank(expressionString)) {
-            throw new IllegalArgumentException("expressionString can not blank!");
+            throw new IllegalArgumentException("Expression string can not be blank!");
         }
         this.expressionString = expressionString;
-        this.charsToProcess = expressionString.replaceAll("\\s+", "").toCharArray();
+        this.charsToProcess = expressionString.toCharArray();
         this.max = charsToProcess.length;
     }
 
@@ -96,7 +96,7 @@ public class Tokenizer {
                         if (isTwoCharToken(TokenKind.EQ)) {
                             pushTwoCharToken(TokenKind.EQ);
                         } else {
-                            throw new IllegalArgumentException("token parse error!");
+                            throw new IllegalArgumentException("Token parse error!");
                         }
                         break;
                     case '!':
@@ -110,18 +110,18 @@ public class Tokenizer {
                         if (isTwoCharToken(TokenKind.SYMBOLIC_AND)) {
                             pushTwoCharToken(TokenKind.SYMBOLIC_AND);
                         } else {
-                            throw new IllegalArgumentException("token parse error!");
+                            throw new IllegalArgumentException("Token parse error!");
                         }
                         break;
                     case '|':
                         if (isTwoCharToken(TokenKind.SYMBOLIC_OR)) {
                             pushTwoCharToken(TokenKind.SYMBOLIC_OR);
                         } else {
-                            throw new IllegalArgumentException("token parse error!");
+                            throw new IllegalArgumentException("Token parse error!");
                         }
                         break;
                     default: {
-                        throw new IllegalArgumentException("token parse error!");
+                        throw new IllegalArgumentException("Token parse error!");
                     }
                 }
             }

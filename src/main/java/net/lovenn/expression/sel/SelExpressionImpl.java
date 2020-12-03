@@ -1,14 +1,26 @@
 package net.lovenn.expression.sel;
 
-public class SelSelExpressionImpl implements SelExpression {
+import net.lovenn.expression.handler.VariableHandler;
+
+import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+
+public class SelExpressionImpl implements SelExpression {
+
+    private ConcurrentHashMap<String, VariableHandler> handlerDict = new ConcurrentHashMap<String, VariableHandler>();
 
     private final String expressionString;
 
     private final SelNode ast;
 
-    public SelSelExpressionImpl(String expressionString, SelNode ast) {
+    SelExpressionImpl(String expressionString, SelNode ast, List<VariableHandler> variableHandlerList) {
         this.expressionString = expressionString;
         this.ast = ast;
+        if(variableHandlerList != null) {
+            for (VariableHandler variableHandler: variableHandlerList) {
+                handlerDict.put(variableHandler.getVariableName(), variableHandler);
+            }
+        }
     }
 
     @Override

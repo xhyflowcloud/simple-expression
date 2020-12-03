@@ -1,5 +1,6 @@
 package net.lovenn.expression.sel;
 
+import net.lovenn.expression.handler.VariableHandler;
 import net.lovenn.expression.sel.ast.*;
 
 import java.util.Collections;
@@ -18,7 +19,7 @@ public class InternalSelExpressionParser {
 
     private ThreadLocal<SelParserContext> context = new ThreadLocal<SelParserContext>();
 
-    SelSelExpressionImpl doParseExpression(String expressionString, SelParserContext context) throws SelParseException {
+    SelExpressionImpl doParseExpression(String expressionString, SelParserContext context, List<VariableHandler> variableHandlerList) throws SelParseException {
 
         try {
             Tokenizer tokenizer = new Tokenizer(expressionString);
@@ -30,7 +31,7 @@ public class InternalSelExpressionParser {
             if (t != null) {
                 throw new SelParseException("express parse error!");
             }
-            return new SelSelExpressionImpl(expressionString, ast);
+            return new SelExpressionImpl(expressionString, ast, variableHandlerList);
         } catch (Exception e) {
             //log
             throw new SelParseException(e.getMessage());
