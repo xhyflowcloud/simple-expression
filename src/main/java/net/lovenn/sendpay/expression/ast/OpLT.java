@@ -21,9 +21,9 @@ public class OpLT extends Operator {
     }
 
     private Boolean handleLTOperation(Object lv, Object rv) throws SelExecuteException {
-        if(!isInteger(lv) || !isInteger(rv)) {
-            return false;
+        if(isInteger(lv) && isInteger(rv)) {
+            return parseInteger(lv) < parseInteger(rv);
         }
-        return parseInteger(lv) < parseInteger(rv);
+        throw new SelExecuteException("Not support operation.");
     }
 }

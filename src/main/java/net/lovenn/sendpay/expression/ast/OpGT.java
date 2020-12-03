@@ -21,9 +21,9 @@ public class OpGT extends Operator {
     }
 
     private Boolean handleGTOperation(Object lv, Object rv) throws SelExecuteException {
-        if(!isInteger(lv) || !isInteger(rv)) {
-            return false;
+        if(isInteger(lv) && isInteger(rv)) {
+            return parseInteger(lv) > parseInteger(rv);
         }
-        return parseInteger(lv) > parseInteger(rv);
+        throw new SelExecuteException("Not support operation.");
     }
 }
