@@ -7,7 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class SelExpressionImpl implements SelExpression {
 
-    private ConcurrentHashMap<String, VariableConverter> handlerDict = new ConcurrentHashMap<String, VariableConverter>();
+    private ConcurrentHashMap<String, VariableConverter> variableConverterDict = new ConcurrentHashMap<String, VariableConverter>();
 
     private final String expressionString;
 
@@ -18,7 +18,7 @@ public class SelExpressionImpl implements SelExpression {
         this.ast = ast;
         if(variableConverterList != null) {
             for (VariableConverter variableConverter : variableConverterList) {
-                handlerDict.put(variableConverter.getVariableName(), variableConverter);
+                variableConverterDict.put(variableConverter.getVariableName(), variableConverter);
             }
         }
     }
@@ -66,6 +66,6 @@ public class SelExpressionImpl implements SelExpression {
 
     @Override
     public VariableConverter getVariableConverter(String variableName) {
-        return handlerDict.get(variableName);
+        return variableConverterDict.get(variableName);
     }
 }

@@ -4,7 +4,7 @@ import java.util.regex.Pattern;
 
 public class StringUtils {
 
-    private static final Pattern BLANK_REGEX = Pattern.compile("^\\s+$");
+    private static final Pattern BLANK_REGEX = Pattern.compile("^\\s*$");
 
     public static boolean isBlank(String str) {
         if(str == null) {

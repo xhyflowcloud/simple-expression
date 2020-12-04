@@ -4,6 +4,7 @@ import net.lovenn.expression.sel.SelExecuteContext;
 import net.lovenn.expression.sel.SelExecuteException;
 import net.lovenn.expression.sel.SelNode;
 import net.lovenn.expression.sel.TokenKind;
+import net.lovenn.expression.util.ValueConverterUtils;
 
 public class OpMinus extends Operator {
 
@@ -24,8 +25,8 @@ public class OpMinus extends Operator {
     }
 
     private Integer handleMinusOperation(Object lv, Object rv) throws SelExecuteException {
-        if (isInteger(lv) && isInteger(rv)) {
-            return parseInteger(lv) - parseInteger(rv);
+        if (ValueConverterUtils.isInteger(lv) && ValueConverterUtils.isInteger(rv)) {
+            return ValueConverterUtils.convertInteger(lv) - ValueConverterUtils.convertInteger(rv);
         }
         throw new SelExecuteException("Not support operation.");
     }

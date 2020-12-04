@@ -14,7 +14,7 @@ public class SelExpressionParser {
         return selExpression;
     }
 
-    public void registerVariableHandler(VariableConverter variableConverter) {
+    public void registerVariableConverter(VariableConverter variableConverter) {
         variableConverters.add(variableConverter);
     }
 }

@@ -1,7 +1,6 @@
 package net.lovenn.expression.handler;
 
 import net.lovenn.expression.sel.SelExecuteContext;
-import net.lovenn.expression.sel.SelExecuteException;
 
 public interface VariableConverter {
 
@@ -13,5 +12,5 @@ public interface VariableConverter {
     /**
      * 处理
      */
-    Object handle(String variable, SelExecuteContext context) throws SelExecuteException;
+    Object convert(String variable, SelExecuteContext context);
 }

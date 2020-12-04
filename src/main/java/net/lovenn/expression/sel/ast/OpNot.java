@@ -1,6 +1,7 @@
 package net.lovenn.expression.sel.ast;
 
 import net.lovenn.expression.sel.*;
+import net.lovenn.expression.util.ValueConverterUtils;
 
 public class OpNot extends Operator {
 
@@ -20,8 +21,8 @@ public class OpNot extends Operator {
     }
 
     private Boolean handleNotOperation(Object value) throws SelExecuteException {
-        if(isBoolean(value)) {
-            return !parseBoolean(value);
+        if(ValueConverterUtils.isBoolean(value)) {
+            return !ValueConverterUtils.convertBoolean(value);
         }
         throw new SelExecuteException("Not support operation.");
     }

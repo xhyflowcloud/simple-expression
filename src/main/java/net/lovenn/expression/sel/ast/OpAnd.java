@@ -4,6 +4,7 @@ import net.lovenn.expression.sel.SelExecuteContext;
 import net.lovenn.expression.sel.SelExecuteException;
 import net.lovenn.expression.sel.SelNode;
 import net.lovenn.expression.sel.TokenKind;
+import net.lovenn.expression.util.ValueConverterUtils;
 
 public class OpAnd extends Operator {
 
@@ -24,8 +25,8 @@ public class OpAnd extends Operator {
     }
 
     private Boolean handleAndOperation(Object lv, Object rv) throws SelExecuteException {
-        if (isBoolean(lv) && isBoolean(rv)) {
-            return parseBoolean(lv) && parseBoolean(rv);
+        if (ValueConverterUtils.isBoolean(lv) && ValueConverterUtils.isBoolean(rv)) {
+            return ValueConverterUtils.convertBoolean(lv) && ValueConverterUtils.convertBoolean(rv);
         }
         throw new SelExecuteException("Not support operation.");
     }

@@ -1,5 +1,6 @@
 package net.lovenn.expression.handler;
 
+import net.lovenn.expression.sel.SelConvertException;
 import net.lovenn.expression.sel.SelExecuteContext;
 import net.lovenn.expression.sel.SelExecuteException;
 
@@ -15,7 +16,7 @@ public class SendpayConverter implements VariableConverter {
     }
 
     @Override
-    public Object handle(String variable, SelExecuteContext context) throws SelExecuteException {
+    public Object convert(String variable, SelExecuteContext context) {
         Matcher matcher = SENDPAY_REGEX.matcher(variable);
         if (matcher.find()) {
             int s, e;
@@ -32,19 +33,19 @@ public class SendpayConverter implements VariableConverter {
                 e = t;
             }
             if (s < 1) {
-                throw new SelExecuteException("Range is illegal!");
+                throw new SelConvertException("Range is illegal!");
             }
 
             String sendpay = (String) context.get("sendpay");
             if (sendpay == null) {
-                throw new SelExecuteException("Can not find variable[sendpay]");
+                throw new SelConvertException("Can not find variable[sendpay].");
             }
 
             if (sendpay.length() < s) {
-                throw new SelExecuteException("sendpay too short");
+                throw new SelConvertException("sendpay too short!");
             }
             return sendpay.substring(s - 1, e);
         }
-        throw new SelExecuteException("Can not apply handler[" + this.getClass().getSimpleName() + "] for variable[" + variable + "]");
+        throw new SelConvertException("Can not apply converter[" + this.getClass().getSimpleName() + "] for variable[" + variable + "]");
     }
 }

@@ -4,7 +4,7 @@ import net.lovenn.expression.sel.SelExecuteContext;
 import net.lovenn.expression.sel.SelExecuteException;
 import net.lovenn.expression.sel.SelNodeImpl;
 import net.lovenn.expression.sel.TokenKind;
-import net.lovenn.expression.util.ValueConverter;
+import net.lovenn.expression.util.ValueConverterUtils;
 
 public class Operand extends SelNodeImpl {
 
@@ -17,6 +17,6 @@ public class Operand extends SelNodeImpl {
 
     @Override
     public Object getValue(SelExecuteContext context) throws SelExecuteException {
-        return ValueConverter.realValue(value, context);
+        return ValueConverterUtils.realValue(value, context);
     }
 }
