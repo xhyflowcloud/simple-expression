@@ -31,7 +31,14 @@ public class SelExpressionImpl implements SelExpression {
     @Override
     public Object getValue(SelExecuteContext context) throws SelExecuteException {
         context.setSelExpression(this);
-        return ast.getValue(context);
+        try {
+            return ast.getValue(context);
+        } catch (SelExecuteException e) {
+            e.printStackTrace();
+            throw e;
+        } catch (Exception e) {
+            throw new SelExecuteException(e);
+        }
     }
 
     @Override
