@@ -1,10 +1,8 @@
 package net.lovenn.expression;
 
-import com.alibaba.fastjson.JSON;
 import net.lovenn.expression.handler.SendpayConverter;
 import net.lovenn.expression.sel.*;
 
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ApplicationTest {
@@ -14,34 +12,6 @@ public class ApplicationTest {
         //testTokenizer();
         //testVarRegex();
         testEatExpression();
-    }
-
-
-    private static void testTokenizer() {
-        {
-            String express = "(1 + 2) * 4 + 5 * 5";
-            Tokenizer tokenizer = new Tokenizer(express);
-            System.out.println(JSON.toJSONString(tokenizer.process()));;
-        }
-
-        {
-            String express = "(sendpay[1,2] + 2) * 4 + 5 * 5";
-            Tokenizer tokenizer = new Tokenizer(express);
-            System.out.println(JSON.toJSONString(tokenizer.process()));;
-        }
-    }
-
-    private static void testVarRegex() {
-        {
-            String express = "@sendpay[8,9]";
-            Matcher matcher = VAR_REGEX.matcher(express);
-
-//            while (matcher.find()) {
-//                System.out.println(1);
-//            }
-            matcher.find();
-            System.out.println(matcher.group());
-        }
     }
 
     private static void testEatExpression() {
