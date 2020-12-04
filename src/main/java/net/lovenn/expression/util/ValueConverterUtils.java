@@ -1,9 +1,8 @@
 package net.lovenn.expression.util;
 
-import net.lovenn.expression.handler.VariableConverter;
+import net.lovenn.expression.handler.ValueConverter;
 import net.lovenn.expression.sel.SelConvertException;
 import net.lovenn.expression.sel.SelExecuteContext;
-import net.lovenn.expression.sel.SelExecuteException;
 import net.lovenn.expression.sel.SelExpression;
 
 import java.util.regex.Matcher;
@@ -59,14 +58,14 @@ public class ValueConverterUtils {
 
     }
 
-    public static Object realValue(String value, SelExecuteContext context) throws SelExecuteException {
+    public static Object realValue(String value, SelExecuteContext context) {
         SelExpression selExpression = context.getSelExpression();
         Matcher valueMatcher = VARIABLE_REGEX.matcher(value);
         if (valueMatcher.find()) {
             String variableName = valueMatcher.group(1);
-            VariableConverter variableConverter = selExpression.getVariableConverter(variableName);
-            if (variableConverter != null) {
-                return variableConverter.convert(value, context);
+            ValueConverter valueConverter = selExpression.getValueConverter(variableName);
+            if (valueConverter != null) {
+                return valueConverter.convert(value, context);
             }
             Object realValue = context.get(variableName);
             if (realValue == null) {

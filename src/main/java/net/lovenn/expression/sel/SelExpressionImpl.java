@@ -1,24 +1,24 @@
 package net.lovenn.expression.sel;
 
-import net.lovenn.expression.handler.VariableConverter;
+import net.lovenn.expression.handler.ValueConverter;
 
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class SelExpressionImpl implements SelExpression {
 
-    private ConcurrentHashMap<String, VariableConverter> variableConverterDict = new ConcurrentHashMap<String, VariableConverter>();
+    private ConcurrentHashMap<String, ValueConverter> valueConverterDict = new ConcurrentHashMap<String, ValueConverter>();
 
     private final String expressionString;
 
     private final SelNode ast;
 
-    SelExpressionImpl(String expressionString, SelNode ast, List<VariableConverter> variableConverterList) {
+    SelExpressionImpl(String expressionString, SelNode ast, List<ValueConverter> valueConverterList) {
         this.expressionString = expressionString;
         this.ast = ast;
-        if(variableConverterList != null) {
-            for (VariableConverter variableConverter : variableConverterList) {
-                variableConverterDict.put(variableConverter.getVariableName(), variableConverter);
+        if (valueConverterList != null) {
+            for (ValueConverter valueConverter : valueConverterList) {
+                valueConverterDict.put(valueConverter.getValueName(), valueConverter);
             }
         }
     }
@@ -72,7 +72,7 @@ public class SelExpressionImpl implements SelExpression {
     }
 
     @Override
-    public VariableConverter getVariableConverter(String variableName) {
-        return variableConverterDict.get(variableName);
+    public ValueConverter getValueConverter(String variableName) {
+        return valueConverterDict.get(variableName);
     }
 }

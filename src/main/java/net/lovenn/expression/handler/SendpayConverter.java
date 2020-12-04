@@ -2,16 +2,15 @@ package net.lovenn.expression.handler;
 
 import net.lovenn.expression.sel.SelConvertException;
 import net.lovenn.expression.sel.SelExecuteContext;
-import net.lovenn.expression.sel.SelExecuteException;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class SendpayConverter implements VariableConverter {
+public class SendpayConverter implements ValueConverter {
     private static final Pattern SENDPAY_REGEX = Pattern.compile("^@sendpay\\[(\\d+)(,(\\d+))?]$");
 
     @Override
-    public String getVariableName() {
+    public String getValueName() {
         return "sendpay";
     }
 

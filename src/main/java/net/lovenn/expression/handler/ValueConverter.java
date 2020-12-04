@@ -2,12 +2,12 @@ package net.lovenn.expression.handler;
 
 import net.lovenn.expression.sel.SelExecuteContext;
 
-public interface VariableConverter {
+public interface ValueConverter {
 
     /**
      * 变量名
      */
-    String getVariableName();
+    String getValueName();
 
     /**
      * 处理

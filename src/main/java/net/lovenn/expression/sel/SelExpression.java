@@ -1,10 +1,10 @@
 package net.lovenn.expression.sel;
 
-import net.lovenn.expression.handler.VariableConverter;
+import net.lovenn.expression.handler.ValueConverter;
 
 public interface SelExpression extends SelNode {
 
     String getExpressionString();
 
-    VariableConverter getVariableConverter(String variableName);
+    ValueConverter getValueConverter(String valueName);
 }
