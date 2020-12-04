@@ -15,8 +15,8 @@ public class SendpayConverter implements ValueConverter {
     }
 
     @Override
-    public Object convert(String variable, SelExecuteContext context) {
-        Matcher matcher = SENDPAY_REGEX.matcher(variable);
+    public Object convert(String value, SelExecuteContext context) {
+        Matcher matcher = SENDPAY_REGEX.matcher(value);
         if (matcher.find()) {
             int s, e;
             if (matcher.group(3) == null) {
@@ -45,6 +45,6 @@ public class SendpayConverter implements ValueConverter {
             }
             return sendpay.substring(s - 1, e);
         }
-        throw new SelConvertException("Can not apply converter[" + this.getClass().getSimpleName() + "] for variable[" + variable + "]");
+        throw new SelConvertException("Can not apply converter[" + this.getClass().getSimpleName() + "] for value[" + value + "]");
     }
 }

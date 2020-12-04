@@ -12,5 +12,5 @@ public interface ValueConverter {
     /**
      * 处理
      */
-    Object convert(String variable, SelExecuteContext context);
+    Object convert(String value, SelExecuteContext context);
 }
